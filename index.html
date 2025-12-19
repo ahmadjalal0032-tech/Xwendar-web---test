@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="ku" dir="rtl"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"> 
+  <title>Xwendar - خوێندەری زیرەک</title> 
+  <style>
+        /* === بنچینە === */
+        :root {
+            --primary-male: #2196F3;    /* ڕەنگی نێر - شین */
+            --primary-female: #E91E63;  /* ڕەنگی مێ - پەمەیی */
+            --secondary-male: #1976D2;   /* شینی تۆختر بۆ نێر */
+            --secondary-female: #C2185B; /* پەمەیی تۆختر بۆ مێ */
+            --accent-male: #03A9F4;     /* شینی ڕووناک بۆ نێر */
+            --accent-female: #FF4081;   /* پەمەیی ڕووناک بۆ مێ */
+            --light: #f8f9fa;
+            --dark: #222222;
+            --text: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --shadow: 0 5px 20px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --transition: all 0.3s ease;
+            
+            /* بنچینە ڕەنگ - پێشگریمان بۆ نێر */
+            --primary: var(--primary-male);
+            --secondary: var(--secondary-male);
+            --accent: var(--accent-male);
+        }
+
+        /* کۆدکردن بۆ مێ */
+        body.female-theme {
+            --primary: var(--primary-female);
+            --secondary: var(--secondary-female);
+            --accent: var(--accent-female);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans Arabic', sans-serif;
+            background: var(--white);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* === بۆ هەموو قەبارەکان === */
+        .container {
+            width: 100%;
+            padding-right: max(5%, 20px);
+            padding-left: max(5%, 20px);
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        /* === خانەی سەرەکی === */
+        header {
+            background: var(--white);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* مێنیو بە شێوەی خۆکار */
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: clamp(1.5rem, 3vw, 2.5rem);
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            padding: 8px 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* === ناوەڕۆکی سەرەکی === */
+        .hero {
+            padding: 140px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(33, 150, 243, 0.03) 0%,
+                rgba(3, 169, 244, 0.03) 50%,
+                rgba(0, 201, 255, 0.03) 100%);
+            z-index: -1;
+        }
+
+        body.female-theme .hero-bg {
+            background: linear-gradient(135deg, 
+                rgba(233, 30, 99, 0.03) 0%,
+                rgba(255, 64, 129, 0.03) 50%,
+                rgba(255, 128, 171, 0.03) 100%);
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            font-size: clamp(2.2rem, 7vw, 4rem);
+            margin-top: 0.5rem;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            padding: 0 1rem;
+        }
+
+        /* === دوگمەی داگرتن === */
+        .download-section {
+            margin: 3rem 0;
+        }
+
+        .download-main-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: clamp(1rem, 2vw, 1.2rem) clamp(2rem, 4vw, 2.5rem);
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+
+        .download-main-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(33, 150, 243, 0.25);
+        }
+
+        body.female-theme .download-main-btn:hover {
+            box-shadow: 0 15px 35px rgba(233, 30, 99, 0.25);
+        }
+
+        .download-main-btn i {
+            font-size: 1.5em;
+        }
+
+        /* پلاتفۆرمەکان بە شێوەی خۆکار */
+        .platforms {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .platform-card {
+            background: var(--white);
+            padding: 1.2rem 1.8rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 160px;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .platform-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .platform-icon {
+            font-size: 1.8rem;
+        }
+
+        .android { color: #3DDC84; }
+
+        .platform-info h4 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 3px;
+        }
+
+        .platform-info p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            opacity: 0.8;
+        }
+
+        /* === تایبەتمەندیەکان === */
+        .features {
+            padding: 5rem 0;
+            background: var(--light);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 3rem;
+            color: var(--dark);
+        }
+
+        /* گرید بە شێوەی خۆکار */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+            gap: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: clamp(1.5rem, 3vw, 2rem);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: clamp(2.5rem, 5vw, 3rem);
+            margin-bottom: 1.2rem;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: clamp(1.2rem, 2vw, 1.4rem);
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+        }
+
+        /* === پێپەڕە === */
+        footer {
+            background: var(--dark);
+            color: var(--white);
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+            padding-right: 10px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #888888;
+            font-size: 0.9rem;
+        }
+
+        /* === دوگمەی گۆڕینی ڕەگەز === */
+        .gender-switch {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .gender-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: white;
+        }
+
+        .gender-btn.male {
+            background: var(--primary-male);
+        }
+
+        .gender-btn.female {
+            background: var(--primary-female);
+        }
+
+        .gender-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .gender-btn.active {
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.8), 0 0 0 6px var(--primary);
+        }
+
+        /* === وەشانە تایبەتەکان === */
+        /* بۆ مۆبایل بچووک (تا 576px) */
+        @media (max-width: 576px) {
+            .container {
+                padding-right: 15px;
+                padding-left: 15px;
+            }
+            
+            .nav-toggle {
+                display: block;
+            }
+            
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: var(--white);
+                position: absolute;
+                top: 100%;
+                right: 0;
+                padding: 1rem;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 var(--radius) var(--radius);
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .platform-card {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .hero {
+                padding: 120px 0 60px;
+            }
+            
+            .gender-switch {
+                bottom: 10px;
+                left: 10px;
+            }
+            
+            .gender-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+        }
+
+        /* بۆ تابلێت (577px - 992px) */
+        @media (min-width: 577px) and (max-width: 992px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .platforms {
+                gap: 0.8rem;
+            }
+            
+            .platform-card {
+                min-width: 140px;
+                padding: 1rem 1.2rem;
+            }
+        }
+
+        /* بۆ کۆمپیوتەر (993px - 1200px) */
+        @media (min-width: 993px) and (max-width: 1200px) {
+            .container {
+                max-width: 960px;
+            }
+        }
+
+        /* بۆ کۆمپیوتەری گەورە (1200px+) */
+        @media (min-width: 1201px) {
+            .container {
+                max-width: 1140px;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* بۆ تەلەفیزۆن (TV) */
+        @media (min-width: 1600px) {
+            .container {
+                max-width: 1400px;
+            }
+            
+            .hero h1 {
+                font-size: 4rem;
+            }
+            
+            .hero h1 .highlight {
+                font-size: 4.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* بۆ شاشەی زۆر بچووک (تا 360px) */
+        @media (max-width: 360px) {
+            .logo-text {
+                font-size: 1.4rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero h1 .highlight {
+                font-size: 2rem;
+            }
+            
+            .download-main-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* بۆ شاشەی کەشی (Landscape) */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .hero {
+                padding: 100px 0 40px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .hero p {
+                margin-bottom: 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* بۆ شێوازی تاریک (Dark Mode) */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --light: #1a1a1a;
+                --dark: #ffffff;
+                --text: #e0e0e0;
+                --text-light: #aaaaaa;
+                --white: #222222;
+                --shadow: 0 5px 20px rgba(0,0,0,0.3);
+            }
+            
+            body {
+                background: #121212;
+            }
+            
+            .feature-card, .platform-card {
+                background: #2a2a2a;
+                border-color: #333333;
+            }
+            
+            .gender-switch {
+                background: rgba(40, 40, 40, 0.9);
+            }
+        }
+    </style> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+ </head> 
+ <body> <!-- خانەی سەرەکی --> 
+  <header> 
+   <div class="container"> 
+    <nav class="nav-container"> <a href="#" class="logo"> 
+      <div class="logo-icon">
+        X 
+      </div> <span class="logo-text">Xwendar</span> </a> <button class="nav-toggle" id="navToggle"> <i class="fas fa-bars"></i> </button> 
+     <ul class="nav-menu" id="navMenu"> 
+      <li><a href="#home" class="nav-link">سەرەتا</a></li> 
+      <li><a href="#features" class="nav-link">تایبەتمەندیەکان</a></li> 
+      <li><a href="#download" class="nav-link">داگرتن</a></li> 
+      <li><a href="#about" class="nav-link">دەربارە</a></li> 
+      <li><a href="#contact" class="nav-link">پەیوەندی</a></li> 
+     </ul> 
+    </nav> 
+   </div> 
+  </header> <!-- ناوەڕۆکی سەرەکی --> 
+  <section class="hero" id="home"> 
+   <div class="hero-bg"></div> 
+   <div class="container"> 
+    <h1>خوێندنێکی زیرەک <span class="highlight">بە تەکنەلۆژیای نوێ</span> </h1> 
+    <p> ئەپڵیکەیشنی <strong>Xwendar</strong> یارمەتیت دەدات لە هەموو شوێنێک خوێندنەکەت باشتر بکەیت. خۆکارانە بە هەموو ئامێرەکاندا دەگونجێت! </p> 
+    <div class="download-section" id="download"> <a href="#" class="download-main-btn" id="downloadBtn"> <i class="fas fa-download"></i> داگرتنی ئەپڵیکەیشن </a> 
+     <div class="platforms"> 
+      <div class="platform-card"> <i class="fab fa-android platform-icon android"></i> 
+       <div class="platform-info"> 
+        <h4>ئەندرۆید</h4> 
+        <p>5.0+</p> 
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+  </section> <!-- تایبەتمەندیەکان --> 
+  <section class="features" id="features"> 
+   <div class="container"> 
+    <h2 class="section-title">تایبەتمەندیەکانی Xwendar</h2> 
+    <div class="features-grid"> 
+     <div class="feature-card"> 
+      <div class="feature-icon">
+        🤖 
+      </div> 
+      <h3>هاوشی دەستکرد</h3> 
+      <p>یارمەتیدەری زیرەک بۆ وەڵامی پرسیارەکان و لێکدانەوەی بابەتەکان</p> 
+     </div> 
+     <div class="feature-card"> 
+      <div class="feature-icon">
+        📱 
+      </div> 
+      <h3>گونجاندن بە خۆکار</h3> 
+      <p>خۆکارانە بە هەموو قەبارەکانی ئامێرەکاندا گونجێت</p> 
+     </div> 
+     <div class="feature-card"> 
+      <div class="feature-icon">
+        🌙 
+      </div> 
+      <h3>شێوازی تاریک</h3> 
+      <p>بەپێی ڕیزکارەکەت شێوازی ڕووناک یان تاریک دەبێت</p> 
+     </div> 
+     <div class="feature-card"> 
+      <div class="feature-icon">
+        ⚡ 
+      </div> 
+      <h3>خێرایی</h3> 
+      <p>پێشکەوتووترین تەکنەلۆژیا بۆ خێراترین کارکردن</p> 
+     </div> 
+     <div class="feature-card"> 
+      <div class="feature-icon">
+        🔒 
+      </div> 
+      <h3>پاراستن</h3> 
+      <p>هەموو زانیاریەکانت پارێزراوە و تایبەتە بەتەنها</p> 
+     </div> 
+     <div class="feature-card"> 
+      <div class="feature-icon">
+        🔄 
+      </div> 
+      <h3>نوێکردنەوەی خۆکار</h3> 
+      <p>خۆکارانە نوێ دەبێتەوە بۆ باشترین کارکردن</p> 
+     </div> 
+    </div> 
+   </div> 
+  </section> <!-- پێپەڕە --> 
+  <footer id="contact"> 
+   <div class="container"> 
+    <div class="footer-content"> 
+     <div class="footer-section"> 
+      <h3>Xwendar</h3> 
+      <p style="color: #cccccc; margin-bottom: 1rem;"> باشترین هاوڕێی خوێندکاران بۆ خوێندنێکی زیرەک و کاریگەر </p> 
+      <div class="social-icons"> <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a> <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a> <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a> <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a> 
+      </div> 
+     </div> 
+     <div class="footer-section"> 
+      <h3>بەستەرەکان</h3> 
+      <ul class="footer-links"> 
+       <li><a href="#privacy">متمانەپێکردن</a></li> 
+       <li><a href="#terms">مەرجەکان</a></li> 
+       <li><a href="#faq">پرسیارە باوەکان</a></li> 
+       <li><a href="#support">پشتگیری</a></li> 
+      </ul> 
+     </div> 
+     <div class="footer-section"> 
+      <h3>پەیوەندی</h3> 
+      <ul class="footer-links"> 
+       <li><a href="mailto:support@xwendar.app">support@xwendar.app</a></li> 
+       <li><a href="tel:+9647501234567">+964 750 123 4567</a></li> 
+       <li><a href="#">هەولێر، کوردستان</a></li> 
+      </ul> 
+     </div> 
+    </div> 
+    <div class="copyright"> 
+     <p>© ٢٠٢٤ Xwendar. هەموو مافەکان پارێزراون.</p> 
+     <p style="margin-top: 0.5rem; font-size: 0.8rem;"> ئەم وێبسایتە خۆکارانە بە هەموو ئامێرەکاندا گونجێت </p> 
+    </div> 
+   </div> 
+  </footer> <!-- دوگمەی گۆڕینی ڕەگەز --> 
+  <div class="gender-switch"> <button class="gender-btn male active" id="maleBtn" title="ڕەگەزی نێر"> <i class="fas fa-mars"></i> </button> <button class="gender-btn female" id="femaleBtn" title="ڕەگەزی مێ"> <i class="fas fa-venus"></i> </button> 
+  </div> 
+  <script>
+        // === مێنیوی مۆبایل ===
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            navToggle.innerHTML = navMenu.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // === داگرتن بەپێی ئامێر ===
+        const downloadBtn = document.getElementById('downloadBtn');
+        
+        downloadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const userAgent = navigator.userAgent;
+            let platform = 'ئەندرۆید';
+            let storeUrl = 'https://play.google.com/store/apps/details?id=com.xwendar.app';
+            
+            // هەمیشە ئەندرۆید پیشان بدە
+            const screenWidth = window.innerWidth;
+            let screenSize = '';
+            
+            if (screenWidth < 576) screenSize = 'مۆبایل بچووک';
+            else if (screenWidth < 768) screenSize = 'مۆبایل';
+            else if (screenWidth < 992) screenSize = 'تابلێت';
+            else if (screenWidth < 1200) screenSize = 'کۆمپیوتەر';
+            else if (screenWidth < 1600) screenSize = 'کۆمپیوتەری گەورە';
+            else screenSize = 'تەلەفیزۆن';
+            
+            // نیشاندانی زانیاری
+            const message = `🎯 ئەپڵیکەیشنی Xwendar بۆ ئەندرۆید\n📱 قەبارە: ${screenSize}\n\nدەتەوێت بچیتە ناو پڕۆسەی داگرتن؟`;
+            
+            if (confirm(message)) {
+                // ڕێنمایی بۆ پلاتفۆرمی ڕاستەقینە
+                alert('بە سەرکەوتوویی ڕەوانە دەکرێت بۆ Google Play Store...');
+                window.open(storeUrl, '_blank');
+                
+                // هەڵگرتنی نموونەیی
+                setTimeout(() => {
+                    alert('داگرتن دەستپێکرد! (نمونەیی)\nلە وێبسایتی ڕاستەقینەدا ڕاستەقینەیە');
+                }, 500);
+            }
+        });
+        
+        // === گۆڕینی ڕەگەز ===
+        const maleBtn = document.getElementById('maleBtn');
+        const femaleBtn = document.getElementById('femaleBtn');
+        const body = document.body;
+        
+        maleBtn.addEventListener('click', () => {
+            body.classList.remove('female-theme');
+            maleBtn.classList.add('active');
+            femaleBtn.classList.remove('active');
+            localStorage.setItem('xwendar-gender', 'male');
+        });
+        
+        femaleBtn.addEventListener('click', () => {
+            body.classList.add('female-theme');
+            femaleBtn.classList.add('active');
+            maleBtn.classList.remove('active');
+            localStorage.setItem('xwendar-gender', 'female');
+        });
+        
+        // چاککردنی ڕەگەز لە سەرەتاوە
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedGender = localStorage.getItem('xwendar-gender');
+            if (savedGender === 'female') {
+                body.classList.add('female-theme');
+                femaleBtn.classList.add('active');
+                maleBtn.classList.remove('active');
+            } else {
+                // پێشگریمان بۆ نێر
+                body.classList.remove('female-theme');
+                maleBtn.classList.add('active');
+                femaleBtn.classList.remove('active');
+                localStorage.setItem('xwendar-gender', 'male');
+            }
+        });
+        
+        // === شیکارکردنی قەبارەی ئێستا ===
+        // ئەم هێڵە کۆمێنت کراوە بۆ ئەوەی لە کۆنسوڵدا نەدەرکەوێت
+        // console.log(`قەبارە: ${width}×${height} | شێواز: ${orientation}`);
+        
+        function updateScreenInfo() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const orientation = width > height ? 'کەشی' : 'ئەستونی';
+            
+            // ئەمە بە کۆمێنتە بۆ ئەوەی لە کۆنسوڵدا نەدەرکەوێت
+            // console.log(`قەبارە: ${width}×${height} | شێواز: ${orientation}`);
+        }
+        
+        // گوێگرتن بۆ گۆڕینی قەبارە
+        window.addEventListener('resize', updateScreenInfo);
+        updateScreenInfo(); // یەکەم جار
+        
+        // === شێوازی تاریک ===
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('dark-mode');
+        }
+        
+        // === سکڕۆڵکردنی نەرم ===
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId !== '#') {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // داخستنی مێنیوی مۆبایل
+                        navMenu.classList.remove('active');
+                        navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                        
+                        // سکڕۆڵکردن
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+    </script> 
+ </body>
+</html>
